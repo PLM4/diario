@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -39,6 +40,15 @@ public class PostController {
         return ResponseEntity.ok(savedPost);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<PostResponseDTO> update(@PathVariable UUID id, @RequestBody PostRequestDTO postRequestDTO) {
+        PostResponseDTO updatedPost = this.postService.updatePost(id, postRequestDTO);
+        if (updatedPost == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedPost);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<PostResponseDTO> getById(@PathVariable UUID id) {
         PostResponseDTO post = this.postService.getPostById(id);
@@ -57,20 +67,30 @@ public class PostController {
 
     @PostMapping("/upload")
     public ResponseEntity<ImageDTO> upload(@RequestParam("file") MultipartFile file) {
-        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
 
         try {
-            Path targetLocation = fileStorageLocation.resolve(fileName);
+            Files.createDirectories(this.fileStorageLocation);
+
+            String fileName = StringUtils.cleanPath(
+                    Objects.requireNonNull(file.getOriginalFilename())
+            );
+
+            Path targetLocation = this.fileStorageLocation.resolve(fileName);
             file.transferTo(targetLocation);
 
-            ImageDTO imageDTO = this.postService.uploadImage(targetLocation.toString(), file.getOriginalFilename());
+            ImageDTO imageDTO = this.postService.uploadImage(
+                    targetLocation.toString(),
+                    file.getOriginalFilename()
+            );
 
             return ResponseEntity.ok(imageDTO);
+
         } catch (IOException ex) {
             ex.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarPost(@PathVariable UUID id) {

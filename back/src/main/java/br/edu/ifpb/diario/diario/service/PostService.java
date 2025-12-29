@@ -65,6 +65,26 @@ public class PostService {
         postRepository.deleteById(id);
     }
 
+    public PostResponseDTO updatePost(UUID id, PostRequestDTO requestDTO) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post não encontrado com id: " + id));
+
+        post.setTitle(requestDTO.title());
+        post.setSubtitle(requestDTO.subtitle());
+        post.setContent(requestDTO.content());
+        post.setImageUrl(requestDTO.imageUrl());
+
+        postRepository.save(post);
+
+        return new PostResponseDTO(
+                post.getId(),
+                post.getTitle(),
+                post.getSubtitle(),
+                post.getContent(),
+                post.getImageUrl(),
+                post.getCreatedAt()
+        );
+    }
+
     public List<PostResponseDTO> getAllPosts() {
         List<PostResponseDTO> respose = new ArrayList<>();
         List<Post> posts = postRepository.findAll();
