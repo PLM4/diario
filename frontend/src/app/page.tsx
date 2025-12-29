@@ -1,14 +1,16 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from "react";
-import Card from "./Components/Card";
+import Card from "./components/Card";
 import styles from "./styles/Home.module.css";
-import Header from "./Components/Header";
-import DialogComponent from "./Components/DialogComponent";
+import DialogBase from "./components/ui/DialogBase";
 import { useStore } from './store/useStore';
 import { Toast } from "primereact/toast";
 import axios from 'axios';
 import { UUID } from "crypto";
+import Footer from "./components/Footer";
+import { Form } from "lucide-react";
+import { FormDialog } from "./components/FormDialog";
 
 type PostResponse = {
   id: UUID;
@@ -23,7 +25,7 @@ const Home: React.FC = () => {
 
   const [dialogVisible, setDialogVisible] = useState(false);
   const [posts, setPosts] = useState<PostResponse[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isloading, setLoading] = useState(true);
 
   const toast = useRef<Toast>(null);
   const successSubmit = useStore(state => state.successSubmit);
@@ -70,9 +72,16 @@ const Home: React.FC = () => {
   return (
     <div className={styles.container}>
       <Toast ref={toast} />
-      <Header onOpenDialog={openDialog} />
 
-      <DialogComponent visible={dialogVisible} onHide={closeDialog} closeDialog={closeDialog}/>
+      <FormDialog
+        visible={dialogVisible}
+        onHide={closeDialog}
+      />
+
+      <header className={styles.pageHeader}>
+        <h1 className={styles.pageTitle}>Diário.dev</h1>
+      </header>
+
       
       <div className={styles.grid}>
         {posts.map((post) => (
@@ -87,6 +96,7 @@ const Home: React.FC = () => {
           </div>
         ))}
       </div>
+      <Footer onOpenDialog={openDialog} />
     </div>
   );
 };

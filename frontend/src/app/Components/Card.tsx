@@ -32,7 +32,7 @@ const Card: React.FC<CardProps> = ({ id, date, title, content, image }) => {
       <div className={styles.cardHeader}>
         <span className={styles.date}>{dataFormatada}</span>
         <h2 className={styles.title}>{title}</h2>
-        <img src={image} alt={title} className={styles.cardImage} />  
+        <img src={image} alt={title} className={styles.cardImage}/>  
       </div>
       <div className={styles.cardContent}>
         <p>{content.length > 120 ? `${content.substring(0, 120)}...` : content}</p>

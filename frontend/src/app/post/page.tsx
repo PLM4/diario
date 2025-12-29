@@ -1,10 +1,14 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import styles from '../styles/Post.module.css';
 import axios from 'axios';
 import { UUID } from "crypto";
+import { ArrowLeft } from 'lucide-react';
+import ButtonComponent from "../components/ButtonComponent";
+import TrashButtonComponent from "../components/TrashButtonComponent";
+import EditButtonComponent from "../components/EditButtonComponent";
 
 interface PostResponse {
   id: UUID;
@@ -25,7 +29,7 @@ export default function PostPage() {
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
   const [post, setPost] = useState<PostResponse>();
-  const [loading, setLoading] = useState(true);
+  const [isloading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -40,7 +44,7 @@ export default function PostPage() {
     };
 
     fetchPosts();
-  }, []);
+  }, [id]);
 
   if (!post) {
     return <div>Post não encontrado</div>;
@@ -56,14 +60,21 @@ export default function PostPage() {
 
   return (
       <div className={styles.container}>
+        <div className={styles.header}>
+          <ButtonComponent onClick={() => window.history.back()} title={<ArrowLeft />} />
+          <div className={styles.headerActions}>
+            <EditButtonComponent id={post.id}></EditButtonComponent>
+            <TrashButtonComponent id={post.id}></TrashButtonComponent>
+          </div>
+        </div>
         <article className={styles.post}>
           <span className={styles.date}>{dataFormatada}</span>
           <h1 className={styles.title}>{post.title}</h1>
           <h2 className={styles.subtitle}>{post.subtitle}</h2>
-          <img src={post.imageUrl} alt={post.title} className={styles.image} />
+          <img src={post.imageUrl} alt={post.title} className={styles.image}/>
           <p className={styles.content}>{post.content}</p>
         </article>
       </div>
   );
+  
 }
-    

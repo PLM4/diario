@@ -10,14 +10,20 @@
   },
   "dependencies": {
     "axios": "^1.8.4",
+    "class-variance-authority": "^0.7.1",
+    "date-fns": "^4.1.0",
     "diario": "file:",
+    "lucide-react": "^0.562.0",
     "next": "15.2.4",
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
     "primereact": "^10.9.4",
+    "radix-ui": "^1.4.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "zustand": "^5.0.3"
+    "tailwind-merge": "^3.4.0",
+    "zustand": "^5.0.3",
+    "client-layout": "^0.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

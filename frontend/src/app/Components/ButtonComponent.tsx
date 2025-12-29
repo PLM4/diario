@@ -1,11 +1,12 @@
 import React from "react";
-import styles from "../styles/Card.module.css";
 import { Button } from 'primereact/button';
 
 interface ButtonProps {
   onClick?: () => void;
-  title: string;
+  title: string | React.ReactNode;
+  className?: string;
 }
+
 
 const ButtonComponent: React.FC<ButtonProps> = ({ onClick, title }) => {
   return (

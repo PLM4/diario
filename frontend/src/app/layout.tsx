@@ -1,21 +1,24 @@
-'use client';
+import "./globals.css";
+import type { Metadata } from "next";
+import ClientLayout from "./client-layout";
 
-import { usePathname } from 'next/navigation'
-import './globals.css';
-import { PrimeReactProvider } from 'primereact/api';
-import { ReactNode } from 'react';
+export const metadata: Metadata = {
+  icons: {
+    icon: "/images/diary-unsplash.jpg",
+  },
+};
 
-export default function RootLayout({ children }: { children: ReactNode }) {
-  const pathname = usePathname();
-  const bodyClass = pathname === "/post" ? "custom-background" : "";
-
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
-      <head />
-      <body className={bodyClass}>
-        <PrimeReactProvider>
+      <body>
+        <ClientLayout>
           {children}
-        </PrimeReactProvider>
+        </ClientLayout>
       </body>
     </html>
   );

@@ -1,12 +1,12 @@
 import React from "react";
-import styles from "../styles/Header.module.css";
+import styles from "../styles/Footer.module.css";
 import ButtonComponent from "./ButtonComponent";
 
 interface PostFormProps {
   onOpenDialog: () => void;
 }
 
-const Header: React.FC<PostFormProps> = ({ onOpenDialog }) => {
+const Footer: React.FC<PostFormProps> = ({ onOpenDialog }) => {
   const handleClick = () => {
     onOpenDialog()
   };
@@ -20,4 +20,4 @@ const Header: React.FC<PostFormProps> = ({ onOpenDialog }) => {
   );
 };
 
-export default Header;
+export default Footer;
