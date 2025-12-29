@@ -1,15 +1,16 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { FileUpload, FileUploadHandlerEvent } from 'primereact/fileupload';
-import { Button } from 'primereact/button';
-import styles from '../styles/Form.module.css';
-import { Image } from 'primereact/image';
-import InputComponent from './InputComponent';
-import { useStore } from '../store/useStore';
-import { Message } from 'primereact/message';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { InputTextarea } from "primereact/inputtextarea";
+import { FileUpload, FileUploadHandlerEvent } from "primereact/fileupload";
+import { Button } from "primereact/button";
+import styles from "../styles/Form.module.css";
+import { Image } from "primereact/image";
+import InputComponent from "./InputComponent";
+import { useStore } from "../store/useStore";
+import { Message } from "primereact/message";
+import axios from "axios";
+import { UUID } from "crypto";
 
 interface FormData {
   titulo: string;
@@ -21,23 +22,26 @@ interface FormData {
 
 interface props {
   closeDialog: () => void;
+  postId?: UUID;
 }
 
-const Form: React.FC<props> = ({ closeDialog }) => {
+const Form: React.FC<props> = ({ closeDialog, postId }) => {
   const [formData, setFormData] = useState<FormData>({
-    titulo: '',
-    subtitulo: '',
-    conteudo: '',
+    titulo: "",
+    subtitulo: "",
+    conteudo: "",
     imagem: null,
     imagemURL: null,
   });
-  const [invalidTitle, setInvalidTitle] = useState(false)
-  const [invalidSubtitle, setInvalidSubtitle] = useState(false)
-  const [invalidImage, seInvalidImage] = useState(false)
+  const [invalidTitle, setInvalidTitle] = useState(false);
+  const [invalidSubtitle, setInvalidSubtitle] = useState(false);
+  const [invalidImage, seInvalidImage] = useState(false);
 
   const { successSubmit, setSuccess } = useStore();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -54,104 +58,128 @@ const Form: React.FC<props> = ({ closeDialog }) => {
 
   const enviarArquivo = async (): Promise<string | undefined | null> => {
     if (!formData.imagem) {
-      console.error('Nenhuma imagem selecionada.');
+      console.error("Nenhuma imagem selecionada.");
       return;
     }
-  
+
     const data = new FormData();
-    data.append('file', formData.imagem);
-  
+    data.append("file", formData.imagem);
+
     try {
-      const response = await axios.post('http://localhost:8080/api/posts/upload', data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios.post(
+        "http://localhost:8080/api/posts/upload",
+        data
+      );
 
       return response.data.url;
-
     } catch (error) {
-      console.error('Erro ao enviar o arquivo:', error);
+      console.error("Erro ao enviar o arquivo:", error);
     }
   };
-  
+
+  useEffect(() => {
+    if (!postId) return;
+
+    axios
+      .get(`http://localhost:8080/api/posts/${postId}`)
+      .then((res) => {
+        setFormData({
+          titulo: res.data.title,
+          subtitulo: res.data.subtitle,
+          conteudo: res.data.content,
+          imagem: null,
+          imagemURL: res.data.imageUrl,
+        });
+
+        setInvalidTitle(false);
+        setInvalidSubtitle(false);
+        seInvalidImage(false);
+      })
+      .catch((err) => console.error(err));
+  }, [postId]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (formData.titulo && formData.subtitulo && formData.imagem) {
-      setInvalidTitle(false);
-      setInvalidSubtitle(false);
-      seInvalidImage(false);
-    }
-
-    if (!formData.titulo && !formData.subtitulo && !formData.imagem) {
-      setInvalidTitle(true);
-      setInvalidSubtitle(true);
-      seInvalidImage(true);
-    }
-    
-    if(!formData.titulo) {
+    if (!formData.titulo) {
       setInvalidTitle(true);
       return;
     }
 
-    if(!formData.subtitulo) {
+    if (!formData.subtitulo) {
       setInvalidSubtitle(true);
       return;
     }
 
-    if(!formData.imagem) {
-      seInvalidImage(true);
-      return;
-    }
+    const imageUrl = formData.imagemURL;
 
-    const imageUrl = await enviarArquivo();
+    if (formData.imagem) {
+      const imageUrl = await enviarArquivo();
+      if (!imageUrl) {
+        console.error("Falha no upload da imagem");
+        return;
+      }
+    }
 
     try {
-      const response = await axios.post('http://localhost:8080/api/posts', {
-        title: formData.titulo,
-        subtitle: formData.subtitulo,
-        content: formData.conteudo,
-        imageUrl: imageUrl,
-      });
+      if (postId) {
+        await axios.put(`http://localhost:8080/api/posts/${postId}`, {
+          title: formData.titulo,
+          subtitle: formData.subtitulo,
+          content: formData.conteudo,
+          imageUrl,
+        });
+      } else {
+        await axios.post("http://localhost:8080/api/posts", {
+          title: formData.titulo,
+          subtitle: formData.subtitulo,
+          content: formData.conteudo,
+          imageUrl,
+        });
+      }
 
+      setSuccess();
+      closeDialog();
     } catch (error) {
-      console.error('Erro ao enviar o arquivo:', error);
+      console.error("Erro ao salvar o post:", error);
     }
-
-    setSuccess();
-    closeDialog();
   };
 
   return (
     <>
       <form onSubmit={handleSubmit} className={styles.formulario}>
         <div className={styles.campo}>
-          <label htmlFor="titulo" className={styles.rotulo}>Título</label>
+          <label htmlFor="titulo" className={styles.rotulo}>
+            Título
+          </label>
           <InputComponent
             id="titulo"
             name="titulo"
             value={formData.titulo}
             onChange={handleInputChange}
             invalid={invalidTitle}
-            textError='Título obrigatório'
+            textError="Título obrigatório"
           />
         </div>
 
         <div className={styles.campo}>
-          <label htmlFor="subtitulo" className={styles.rotulo}>Subtítulo</label>
+          <label htmlFor="subtitulo" className={styles.rotulo}>
+            Subtítulo
+          </label>
           <InputComponent
             id="subtitulo"
             name="subtitulo"
             value={formData.subtitulo}
             onChange={handleInputChange}
             invalid={invalidSubtitle}
-            textError='Subtítulo obrigatório'
+            textError="Subtítulo obrigatório"
           />
         </div>
 
         <div className={styles.campo}>
-          <label htmlFor="conteudo" className={styles.rotulo}>Conteúdo</label>
+          <label htmlFor="conteudo" className={styles.rotulo}>
+            Conteúdo
+          </label>
           <InputTextarea
             id="conteudo"
             name="conteudo"
@@ -160,13 +188,13 @@ const Form: React.FC<props> = ({ closeDialog }) => {
             rows={5}
             className="w-full"
             onMouseOver={(e) => {
-              e.currentTarget.style.borderColor = '#c2c2c2';
+              e.currentTarget.style.borderColor = "#c2c2c2";
             }}
             onFocus={(e) => {
-              e.currentTarget.style.borderColor = '#c2c2c2';
+              e.currentTarget.style.borderColor = "#c2c2c2";
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = '#c2c2c2';
+              e.currentTarget.style.borderColor = "#c2c2c2";
             }}
           />
         </div>
@@ -182,26 +210,37 @@ const Form: React.FC<props> = ({ closeDialog }) => {
             accept="image/*"
             chooseOptions={{
               style: {
-                backgroundColor: '#131313',
-                color: 'white',
-                border: '1.5px solid #131313',
+                backgroundColor: "#131313",
+                color: "white",
+                border: "1.5px solid #131313",
               },
             }}
           />
-          {invalidImage && <Message severity="error" text={"Imagem Obrigatória!"} />}
+          {invalidImage && (
+            <Message severity="error" text={"Imagem Obrigatória!"} />
+          )}
         </div>
 
         {formData.imagemURL && (
           <div className={styles.campo}>
-            <Image src={formData.imagemURL} alt="Imagem selecionada" width="100%" preview />
+            <Image
+              src={formData.imagemURL}
+              alt="Imagem selecionada"
+              width="100%"
+              preview
+            />
           </div>
         )}
 
-        <Button 
-          label="Enviar" 
-          icon="pi pi-check" 
-          type="submit" 
-          style={{ backgroundColor: '#131313', color: 'white', border: '1.5px solid #131313' }}
+        <Button
+          label="Enviar"
+          icon="pi pi-check"
+          type="submit"
+          style={{
+            backgroundColor: "#131313",
+            color: "white",
+            border: "1.5px solid #131313",
+          }}
         />
       </form>
     </>

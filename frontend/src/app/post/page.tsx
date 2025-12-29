@@ -46,8 +46,11 @@ export default function PostPage() {
     fetchPosts();
   }, [id]);
 
+  if (isloading) {
+    return <div className={styles.loading}>Carregando...</div>;
+  } 
   if (!post) {
-    return <div>Post não encontrado</div>;
+    return <div className={styles.error}>Post não encontrado.</div>;
   }
 
   const options: Options = {
