@@ -3,13 +3,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import Card from "./components/Card";
 import styles from "./styles/Home.module.css";
-import DialogBase from "./components/ui/DialogBase";
 import { useStore } from './store/useStore';
 import { Toast } from "primereact/toast";
 import axios from 'axios';
 import { UUID } from "crypto";
 import Footer from "./components/Footer";
-import { Form } from "lucide-react";
 import { FormDialog } from "./components/FormDialog";
 
 type PostResponse = {
@@ -81,8 +79,7 @@ const Home: React.FC = () => {
       <header className={styles.pageHeader}>
         <h1 className={styles.pageTitle}>Diário.dev</h1>
       </header>
-
-      
+    
       <div className={styles.grid}>
         {posts.map((post) => (
           <div key={post.id} className={styles.cardWrapper}>
