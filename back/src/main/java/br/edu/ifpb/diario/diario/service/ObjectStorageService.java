@@ -1,6 +1,5 @@
 package br.edu.ifpb.diario.diario.service;
 
-import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.UploadObjectArgs;
 import io.minio.errors.MinioException;
