@@ -10,6 +10,8 @@ import { UUID } from "crypto";
 import Footer from "./components/Footer";
 import { FormDialog } from "./components/FormDialog";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { motion } from "framer-motion";
+import { fadeDownAnimation, fadeUpAnimation } from "./lib/animations";
 
 type PostResponse = {
   id: UUID;
@@ -75,9 +77,13 @@ const Home: React.FC = () => {
 
       <FormDialog visible={dialogVisible} onHide={closeDialog} />
 
-      <header className={styles.pageHeader}>
+      <motion.header
+        className={styles.pageHeader}
+        {...fadeDownAnimation}
+        transition={{ duration: 0.5 }}
+      >
         <h1 className={styles.pageTitle}>Diário.dev</h1>
-      </header>
+      </motion.header>
 
       {isloading ? (
         <div className={styles.loadingWrapper}>
@@ -92,8 +98,13 @@ const Home: React.FC = () => {
           {posts.length === 0 ? (
             <p className={styles.loading}>Nenhum post encontrado.</p>
           ) : (
-            posts.map((post) => (
-              <div key={post.id} className={styles.cardWrapper}>
+            posts.map((post, index) => (
+              <motion.div
+                key={post.id}
+                className={styles.cardWrapper}
+                {...fadeUpAnimation}
+                transition={{ duration: 0.5, delay: index * 0.2 }}
+              >
                 <Card
                   id={post.id}
                   date={post.createdAt}
@@ -101,7 +112,7 @@ const Home: React.FC = () => {
                   content={post.content}
                   image={post.imageUrl}
                 />
-              </div>
+              </motion.div>
             ))
           )}
         </div>

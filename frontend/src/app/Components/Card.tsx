@@ -3,11 +3,13 @@ import Link from "next/link";
 import styles from "../styles/Card.module.css";
 import ButtonComponent from "./ButtonComponent";
 import { UUID } from "crypto";
+import { motion } from "framer-motion";
+import { fadeLeftAnimation, fadeUpAnimation } from "../lib/animations";
 
 interface Options {
-  day:  '2-digit';
-  month: 'long';
-  year: 'numeric';
+  day: "2-digit";
+  month: "long";
+  year: "numeric";
 }
 
 interface CardProps {
@@ -15,33 +17,61 @@ interface CardProps {
   date: Date;
   title: string;
   content: string;
-  image: string; 
+  image: string;
 }
 
 const Card: React.FC<CardProps> = ({ id, date, title, content, image }) => {
   const options: Options = {
-    day: '2-digit',
-    month: 'long', 
-    year: 'numeric',
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
   };
-  
-  const dataFormatada = new Date(date).toLocaleDateString('pt-BR', options);
+
+  const dataFormatada = new Date(date).toLocaleDateString("pt-BR", options);
 
   return (
     <div className={styles.card}>
       <div className={styles.cardHeader}>
-        <span className={styles.date}>{dataFormatada}</span>
-        <h2 className={styles.title}>{title}</h2>
-        <img src={image} alt={title} className={styles.cardImage}/>  
+        <motion.span
+          className={styles.date}
+          {...fadeLeftAnimation}
+          transition={{ duration: 0.5 }}
+        >
+          {dataFormatada}
+        </motion.span>
+        <motion.h2
+          className={styles.title}
+          {...fadeLeftAnimation}
+          transition={{ duration: 0.5 }}
+        >
+          {title}
+        </motion.h2>
+        <motion.img
+          src={image}
+          alt={title}
+          className={styles.cardImage}
+          {...fadeUpAnimation}
+          transition={{ duration: 0.5 }}
+        />
       </div>
-      <div className={styles.cardContent}>
-        <p>{content.length > 120 ? `${content.substring(0, 120)}...` : content}</p>
-      </div>
-      <div className={styles.cardFooter}>
+      <motion.div
+        className={styles.cardContent}
+        {...fadeLeftAnimation}
+        transition={{ duration: 0.5 }}
+      >
+        <p>
+          {content.length > 120 ? `${content.substring(0, 120)}...` : content}
+        </p>
+      </motion.div>
+      <motion.div
+        className={styles.cardFooter}
+        {...fadeLeftAnimation}
+        transition={{ duration: 0.5 }}
+      >
         <Link href={`/post?id=${id}`}>
           <ButtonComponent title="FULL STORY" />
         </Link>
-      </div>
+      </motion.div>
     </div>
   );
 };

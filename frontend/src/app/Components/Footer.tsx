@@ -1,6 +1,8 @@
 import React from "react";
 import styles from "../styles/Footer.module.css";
 import ButtonComponent from "./ButtonComponent";
+import { motion } from "framer-motion";
+import { fadeLeftAnimation } from "../lib/animations";
 
 interface PostFormProps {
   onOpenDialog: () => void;
@@ -8,14 +10,14 @@ interface PostFormProps {
 
 const Footer: React.FC<PostFormProps> = ({ onOpenDialog }) => {
   const handleClick = () => {
-    onOpenDialog()
+    onOpenDialog();
   };
 
   return (
     <div className={styles.formContainer}>
-      <div className={styles.fakeTextarea}>
+      <motion.div className={styles.fakeTextarea} {...fadeLeftAnimation}>
         <ButtonComponent title="New post" onClick={handleClick} />
-      </div>
+      </motion.div>
     </div>
   );
 };

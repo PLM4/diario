@@ -11,8 +11,10 @@
   "dependencies": {
     "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
+    "client-layout": "^0.1.0",
     "date-fns": "^4.1.0",
     "diario": "file:",
+    "framer-motion": "^12.23.26",
     "lucide-react": "^0.562.0",
     "next": "15.2.4",
     "primeflex": "^4.0.0",
@@ -22,8 +24,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.4.0",
-    "zustand": "^5.0.3",
-    "client-layout": "^0.1.0"
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

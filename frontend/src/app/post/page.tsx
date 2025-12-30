@@ -10,6 +10,12 @@ import ButtonComponent from "../components/ButtonComponent";
 import TrashButtonComponent from "../components/TrashButtonComponent";
 import EditButtonComponent from "../components/EditButtonComponent";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { motion } from "framer-motion";
+import {
+  fadeLeftAnimation,
+  fadeRightAnimation,
+  fadeUpAnimation,
+} from "../lib/animations";
 
 interface PostResponse {
   id: UUID;
@@ -77,7 +83,13 @@ export default function PostPage() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
+      <motion.div
+        className={styles.header}
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -50 }}
+        transition={{ duration: 0.5 }}
+      >
         <ButtonComponent
           onClick={() => window.history.back()}
           title={<ArrowLeft />}
@@ -86,13 +98,42 @@ export default function PostPage() {
           <EditButtonComponent id={post.id}></EditButtonComponent>
           <TrashButtonComponent id={post.id}></TrashButtonComponent>
         </div>
-      </div>
+      </motion.div>
       <article className={styles.post}>
-        <span className={styles.date}>{dataFormatada}</span>
-        <h1 className={styles.title}>{post.title}</h1>
-        <h2 className={styles.subtitle}>{post.subtitle}</h2>
-        <img src={post.imageUrl} alt={post.title} className={styles.image} />
-        <p className={styles.content}>{post.content}</p>
+        <motion.span
+          className={styles.date}
+          {...fadeRightAnimation}
+          transition={{ duration: 0.5 }}
+        >
+          {dataFormatada}
+        </motion.span>
+        <motion.h1
+          className={styles.title}
+          {...fadeUpAnimation}
+          transition={{ duration: 0.5 }}
+        >
+          {post.title}
+        </motion.h1>
+        <motion.h2
+          className={styles.subtitle}
+          {...fadeLeftAnimation}
+          transition={{ duration: 0.5 }}
+        >
+          {post.subtitle}
+        </motion.h2>
+        <motion.img
+          src={post.imageUrl}
+          alt={post.title}
+          className={styles.image}
+          {...fadeUpAnimation}
+        />
+        <motion.p
+          className={styles.content}
+          {...fadeLeftAnimation}
+          transition={{ duration: 0.5 }}
+        >
+          {post.content}
+        </motion.p>
       </article>
     </div>
   );
