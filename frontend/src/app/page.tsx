@@ -9,6 +9,7 @@ import axios from "axios";
 import { UUID } from "crypto";
 import Footer from "./components/Footer";
 import { FormDialog } from "./components/FormDialog";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 type PostResponse = {
   id: UUID;
@@ -78,19 +79,34 @@ const Home: React.FC = () => {
         <h1 className={styles.pageTitle}>Diário.dev</h1>
       </header>
 
-      <div className={styles.grid}>
-        {posts.map((post) => (
-          <div key={post.id} className={styles.cardWrapper}>
-            <Card
-              id={post.id}
-              date={post.createdAt}
-              title={post.title}
-              content={post.content}
-              image={post.imageUrl}
-            />
-          </div>
-        ))}
-      </div>
+      {isloading ? (
+        <div className={styles.loadingWrapper}>
+          <ProgressSpinner
+            strokeWidth="4"
+            animationDuration=".8s"
+            className={styles.spinner}
+          />
+        </div>
+      ) : (
+        <div className={styles.grid}>
+          {posts.length === 0 ? (
+            <p className={styles.loading}>Nenhum post encontrado.</p>
+          ) : (
+            posts.map((post) => (
+              <div key={post.id} className={styles.cardWrapper}>
+                <Card
+                  id={post.id}
+                  date={post.createdAt}
+                  title={post.title}
+                  content={post.content}
+                  image={post.imageUrl}
+                />
+              </div>
+            ))
+          )}
+        </div>
+      )}
+
       <Footer onOpenDialog={openDialog} />
     </div>
   );
