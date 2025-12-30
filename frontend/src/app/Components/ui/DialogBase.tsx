@@ -10,7 +10,6 @@ interface DialogBaseProps {
   description?: string;
   width?: string;
   children?: React.ReactNode;
-  onConfirm?: () => void;
 }
 
 export default function DialogBase({
@@ -18,25 +17,28 @@ export default function DialogBase({
   onHide,
   title,
   description,
-  width = "30rem",
+  width = "32rem",
   children,
 }: DialogBaseProps) {
   return (
     <Dialog
       visible={visible}
       onHide={onHide}
-      style={{ width }}
       modal
+      style={{ width }}
       header={
         title ? (
-          <div>
+          <div className="border-b border-gray-200">
             {typeof title === "string" ? (
-              <h2 className="font-semibold text-lg">{title}</h2>
+              <h2 className="text-xl font-semibold text-gray-900 leading-tight">
+                {title}
+              </h2>
             ) : (
               title
             )}
+
             {description && (
-              <p className="text-sm text-gray-500 mt-1 ">
+              <p className="mt-5 text-lg text-gray-500 leading-relaxed">
                 {description}
               </p>
             )}
@@ -44,8 +46,7 @@ export default function DialogBase({
         ) : undefined
       }
     >
-      {children}
+      <div className="">{children}</div>
     </Dialog>
   );
 }
-
