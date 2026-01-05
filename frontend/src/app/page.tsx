@@ -96,7 +96,7 @@ const Home: React.FC = () => {
       ) : (
         <div className={styles.grid}>
           {posts.length === 0 ? (
-            <p className={styles.loading}>Nenhum post encontrado.</p>
+            <p className={styles.postNotFound}>Nenhum post encontrado.</p>
           ) : (
             posts.map((post, index) => (
               <motion.div

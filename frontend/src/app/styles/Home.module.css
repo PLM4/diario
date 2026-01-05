@@ -10,6 +10,12 @@
   gap: 2rem;
 }
 
+.postNotFound {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .loadingWrapper {
   display: flex;
   align-items: center;

@@ -56,13 +56,20 @@ public class PostService {
         file.delete();
 
         return new ImageDTO(imageUrl);
-    }
+    }   
 
     public void deletePost(UUID id) {
-        if (!postRepository.existsById(id)) {
-            throw new RuntimeException("Post não encontrado com id: " + id);
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Post não encontrado com id: " + id));
+
+        if (post.getImageUrl() != null && post.getImageUrl().startsWith("blob:")) {
+            System.out.println("Ignorando blob URL, não é imagem do MinIO");
+        } else {
+            String objectName = extractObjectName(post.getImageUrl());
+            objectStorageService.deleteImage("images", objectName);
         }
-        postRepository.deleteById(id);
+
+        postRepository.delete(post);
     }
 
     public PostResponseDTO updatePost(UUID id, PostRequestDTO requestDTO) {
@@ -115,5 +122,11 @@ public class PostService {
                 post.getImageUrl(),
                 post.getCreatedAt()
         );
+    }
+
+    private String extractObjectName(String imageUrl) {
+        if (imageUrl == null || imageUrl.isBlank()) return null;
+
+        return imageUrl.substring(imageUrl.indexOf("/images/") + 1);
     }
 }

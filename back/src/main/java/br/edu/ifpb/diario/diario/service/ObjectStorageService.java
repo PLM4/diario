@@ -5,6 +5,7 @@ import io.minio.UploadObjectArgs;
 import io.minio.errors.MinioException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import io.minio.RemoveObjectArgs;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -59,4 +60,23 @@ public class ObjectStorageService {
             throw new RuntimeException(e);
         }
     }
+
+    public void deleteImage(String bucketName, String imageUrl) {
+    try {
+        String objectName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+
+        minioClient.removeObject(
+            RemoveObjectArgs.builder()
+                .bucket(bucketName)
+                .object(objectName)
+                .build()
+        );
+
+        System.out.println("Imagem removida do MinIO: " + objectName);
+
+    } catch (Exception e) {
+        throw new RuntimeException("Erro ao deletar imagem no MinIO", e);
+    }
+}
+
 }

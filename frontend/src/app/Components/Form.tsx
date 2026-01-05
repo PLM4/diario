@@ -17,7 +17,8 @@ interface FormData {
   subtitulo: string;
   conteudo: string;
   imagem: File | null;
-  imagemURL: string | null;
+  imagemUrl: string | null;
+  previewUrl: string | null;
 }
 
 interface props {
@@ -31,7 +32,8 @@ const Form: React.FC<props> = ({ closeDialog, postId }) => {
     subtitulo: "",
     conteudo: "",
     imagem: null,
-    imagemURL: null,
+    imagemUrl: null,
+    previewUrl: null,
   });
   const [invalidTitle, setInvalidTitle] = useState(false);
   const [invalidSubtitle, setInvalidSubtitle] = useState(false);
@@ -48,19 +50,16 @@ const Form: React.FC<props> = ({ closeDialog, postId }) => {
 
   const handleUpload = (event: FileUploadHandlerEvent) => {
     const file = event.files[0];
-    const objectURL = URL.createObjectURL(file);
+    const previewUrl = URL.createObjectURL(file);
     setFormData((prev) => ({
       ...prev,
       imagem: file,
-      imagemURL: objectURL,
+      previewUrl,
     }));
   };
 
-  const enviarArquivo = async (): Promise<string | undefined | null> => {
-    if (!formData.imagem) {
-      console.error("Nenhuma imagem selecionada.");
-      return;
-    }
+  const enviarArquivo = async (): Promise<string | null> => {
+    if (!formData.imagem) return null;
 
     const data = new FormData();
     data.append("file", formData.imagem);
@@ -71,9 +70,11 @@ const Form: React.FC<props> = ({ closeDialog, postId }) => {
         data
       );
 
-      return response.data.url;
+      console.log("UPLOAD RESPONSE:", response.data); // 🔥
+      return response.data?.url;
     } catch (error) {
       console.error("Erro ao enviar o arquivo:", error);
+      return null;
     }
   };
 
@@ -88,7 +89,8 @@ const Form: React.FC<props> = ({ closeDialog, postId }) => {
           subtitulo: res.data.subtitle,
           conteudo: res.data.content,
           imagem: null,
-          imagemURL: res.data.imageUrl,
+          imagemUrl: res.data.imageUrl,
+          previewUrl: null,
         });
 
         setInvalidTitle(false);
@@ -111,14 +113,15 @@ const Form: React.FC<props> = ({ closeDialog, postId }) => {
       return;
     }
 
-    const imageUrl = formData.imagemURL;
+    let imageUrl = formData.imagemUrl;
 
     if (formData.imagem) {
-      const imageUrl = await enviarArquivo();
-      if (!imageUrl) {
+      const uploadedUrl = await enviarArquivo();
+      if (!uploadedUrl) {
         console.error("Falha no upload da imagem");
         return;
       }
+      imageUrl = uploadedUrl;
     }
 
     try {
@@ -221,10 +224,10 @@ const Form: React.FC<props> = ({ closeDialog, postId }) => {
           )}
         </div>
 
-        {formData.imagemURL && (
+        {formData.previewUrl && (
           <div className={styles.campo}>
             <Image
-              src={formData.imagemURL}
+              src={formData.previewUrl}
               alt="Imagem selecionada"
               width="100%"
               preview
