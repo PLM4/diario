@@ -52,6 +52,7 @@ const Card: React.FC<CardProps> = ({ id, date, title, content, image }) => {
           className={styles.cardImage}
           {...fadeUpAnimation}
           transition={{ duration: 0.5 }}
+          whileHover={{ scale: 1.02 }}
         />
       </div>
       <motion.div

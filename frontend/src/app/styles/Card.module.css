@@ -40,10 +40,6 @@
   transition: transform 0.3s ease;
 }
 
-.cardImage:hover {
-  transform: scale(1.02);
-}
-
 .cardContent {
   flex-grow: 1;
   padding: 1.5rem;

@@ -93,28 +93,28 @@ const Home: React.FC = () => {
             className={styles.spinner}
           />
         </div>
+      ) : posts.length === 0 ? (
+        <div className={styles.emptyWrapper}>
+          <p className={styles.postNotFound}>Nenhum post encontrado.</p>
+        </div>
       ) : (
         <div className={styles.grid}>
-          {posts.length === 0 ? (
-            <p className={styles.postNotFound}>Nenhum post encontrado.</p>
-          ) : (
-            posts.map((post, index) => (
-              <motion.div
-                key={post.id}
-                className={styles.cardWrapper}
-                {...fadeUpAnimation}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
-              >
-                <Card
-                  id={post.id}
-                  date={post.createdAt}
-                  title={post.title}
-                  content={post.content}
-                  image={post.imageUrl}
-                />
-              </motion.div>
-            ))
-          )}
+          {posts.map((post, index) => (
+            <motion.div
+              key={post.id}
+              className={styles.cardWrapper}
+              {...fadeUpAnimation}
+              transition={{ duration: 0.5, delay: index * 0.2 }}
+            >
+              <Card
+                id={post.id}
+                date={post.createdAt}
+                title={post.title}
+                content={post.content}
+                image={post.imageUrl}
+              />
+            </motion.div>
+          ))}
         </div>
       )}
 

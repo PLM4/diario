@@ -39,6 +39,8 @@ const Form: React.FC<props> = ({ closeDialog, postId }) => {
   const [invalidSubtitle, setInvalidSubtitle] = useState(false);
   const [invalidImage, seInvalidImage] = useState(false);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const { successSubmit, setSuccess } = useStore();
 
   const handleInputChange = (
@@ -103,6 +105,8 @@ const Form: React.FC<props> = ({ closeDialog, postId }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (isSubmitting) return;
+
     if (!formData.titulo) {
       setInvalidTitle(true);
       return;
@@ -112,6 +116,8 @@ const Form: React.FC<props> = ({ closeDialog, postId }) => {
       setInvalidSubtitle(true);
       return;
     }
+
+    setIsSubmitting(true);
 
     let imageUrl = formData.imagemUrl;
 
@@ -145,6 +151,8 @@ const Form: React.FC<props> = ({ closeDialog, postId }) => {
       closeDialog();
     } catch (error) {
       console.error("Erro ao salvar o post:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -236,13 +244,15 @@ const Form: React.FC<props> = ({ closeDialog, postId }) => {
         )}
 
         <Button
-          label="Enviar"
-          icon="pi pi-check"
+          label={isSubmitting ? "Enviando..." : "Enviar"}
+          icon={isSubmitting ? "pi pi-spin pi-spinner" : "pi pi-check"}
           type="submit"
+          disabled={isSubmitting}
           style={{
             backgroundColor: "#131313",
             color: "white",
             border: "1.5px solid #131313",
+            opacity: isSubmitting ? 0.7 : 1,
           }}
         />
       </form>

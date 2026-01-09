@@ -10,10 +10,16 @@
   gap: 2rem;
 }
 
-.postNotFound {
+.emptyWrapper {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 50vh;
+}
+
+.postNotFound {
+  font-size: 1.2rem;
+  color: #666;
 }
 
 .loadingWrapper {
