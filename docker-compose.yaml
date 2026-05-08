@@ -18,9 +18,12 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/diario
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
     depends_on:
       - postgres
-      - minio
+      # - minio
 
   frontend:
     build: ./frontend
@@ -30,30 +33,30 @@ services:
     depends_on:
       - backend
 
-  minio:
-    image: minio/minio
-    container_name: minio
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    volumes:
-      - minio_data:/data
-    environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
-    command: server /data --console-address ":9001"
+#   minio:
+#     image: minio/minio
+#     container_name: minio
+#     ports:
+#       - "9000:9000"
+#       - "9001:9001"
+#     volumes:
+#       - minio_data:/data
+#     environment:
+#       MINIO_ROOT_USER: minioadmin
+#       MINIO_ROOT_PASSWORD: minioadmin
+#     command: server /data --console-address ":9001"
 
-  minio-init:
-    image: minio/mc
-    depends_on:
-      - minio
-    entrypoint: >
-      /bin/sh -c "
-      sleep 5 &&
-      mc alias set local http://minio:9000 minioadmin minioadmin &&
-      mc mb -p local/images || true &&
-      mc anonymous set download local/images
-      "
+#   minio-init:
+#     image: minio/mc
+#     depends_on:
+#       - minio
+#     entrypoint: >
+#       /bin/sh -c "
+#       sleep 5 &&
+#       mc alias set local http://minio:9000 minioadmin minioadmin &&
+#       mc mb -p local/images || true &&
+#       mc anonymous set download local/images
+#       "
 
-volumes:
-  minio_data:
+# volumes:
+#   minio_data:
