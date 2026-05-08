@@ -41,7 +41,7 @@ const Form: React.FC<props> = ({ closeDialog, postId }) => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { successSubmit, setSuccess } = useStore();
+  const { setSuccess } = useStore();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,

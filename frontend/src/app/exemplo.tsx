@@ -5,7 +5,7 @@ import styles from "./page.module.css";
 
 type Props = {
   counter: number;
-  setCounter: any;
+  setCounter: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export default function App() {
@@ -20,6 +20,6 @@ export default function App() {
 
 export function MyButton(props: Props) {
   return (
-    <button onClick={c => {props.setCounter(props.counter + 1)}}>{props.counter}</button>
+    <button onClick={() => {props.setCounter(props.counter + 1)}}>{props.counter}</button>
   );
 }

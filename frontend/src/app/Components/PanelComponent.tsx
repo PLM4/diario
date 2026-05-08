@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'; 
-import { Panel } from 'primereact/panel';
+import { Panel, PanelHeaderTemplateOptions, PanelFooterTemplateOptions } from 'primereact/panel';
 import { Avatar } from 'primereact/avatar';
 import { Menu } from 'primereact/menu';
 import { Button } from 'primereact/button';
@@ -14,7 +14,7 @@ export default function PanelComponent() {
         { label: 'Delete', icon: 'pi pi-times' }
     ];
 
-    const headerTemplate = (options: any) => {
+    const headerTemplate = (options: PanelHeaderTemplateOptions) => {
         const className = `${options.className} justify-content-space-between`;
 
         return (
@@ -33,7 +33,7 @@ export default function PanelComponent() {
         );
     };
 
-    const footerTemplate = (options: any) => {
+    const footerTemplate = (options: PanelFooterTemplateOptions) => {
         const className = `${options.className} flex flex-wrap align-items-center justify-content-between gap-3`;
 
         return (

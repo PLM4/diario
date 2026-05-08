@@ -29,7 +29,6 @@ const Home: React.FC = () => {
 
   const toast = useRef<Toast>(null);
   const successSubmit = useStore((state) => state.successSubmit);
-  const setSuccess = useStore((state) => state.setSuccess);
 
   const openDialog = () => {
     setDialogVisible(true);
