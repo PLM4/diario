@@ -17,6 +17,9 @@ importers:
       client-layout:
         specifier: ^0.1.0
         version: 0.1.0(@babel/eslint-parser@7.28.6(@babel/core@7.29.0)(eslint@9.39.4))(@typescript-eslint/parser@8.59.1(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(stylelint@14.16.1)(typescript@5.9.3)(webpack@4.47.0)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -8515,6 +8518,7 @@ snapshots:
       axios: 1.16.0
       class-variance-authority: 0.7.1
       client-layout: 0.1.0(@babel/eslint-parser@7.28.6(@babel/core@7.29.0)(eslint@9.39.4))(@typescript-eslint/parser@8.59.1(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(stylelint@14.16.1)(typescript@5.9.3)(webpack@4.47.0)
+      clsx: 2.1.1
       date-fns: 4.1.0
       framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       lucide-react: 0.562.0(react@19.2.5)
