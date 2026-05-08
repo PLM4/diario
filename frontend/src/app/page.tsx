@@ -43,7 +43,7 @@ const Home: React.FC = () => {
     const fetchPosts = async () => {
       try {
         const response = await axios.get<PostResponse[]>(
-          "http://localhost:8080/api/posts"
+          "http://localhost:8080/api/posts",
         );
         setPosts(response.data);
       } catch (err) {

@@ -44,7 +44,7 @@ const Form: React.FC<props> = ({ closeDialog, postId }) => {
   const { successSubmit, setSuccess } = useStore();
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -69,7 +69,7 @@ const Form: React.FC<props> = ({ closeDialog, postId }) => {
     try {
       const response = await axios.post(
         "http://localhost:8080/api/posts/upload",
-        data
+        data,
       );
 
       console.log("UPLOAD RESPONSE:", response.data); // 🔥
@@ -218,7 +218,7 @@ const Form: React.FC<props> = ({ closeDialog, postId }) => {
             customUpload
             uploadHandler={handleUpload}
             chooseLabel="Selecionar Imagem"
-            accept="image/*"
+            accept=".jpg,.jpeg,.png,.webp"
             chooseOptions={{
               style: {
                 backgroundColor: "#131313",

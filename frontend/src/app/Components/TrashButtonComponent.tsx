@@ -15,28 +15,31 @@ export default function TrashButtonComponent({ id }: { id: UUID }) {
   const deletarPostagem = async () => {
     await deletePost(id);
     setVisible(false);
-     router.back();
+    router.back();
   };
 
   return (
     <>
-      <ButtonComponent
-        title={<Trash2 />}
-        onClick={() => setVisible(true)}
-      />
+      <ButtonComponent title={<Trash2 />} onClick={() => setVisible(true)} />
       <DialogBase
         visible={visible}
         onHide={() => setVisible(false)}
         title="Confirmar exclusão"
         description="Essa ação não pode ser desfeita!"
-        onConfirm={deletarPostagem}
       >
-        <ButtonComponent 
-            title="Confirmar"
-            onClick={deletarPostagem}
-        />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row-reverse",
+            justifyContent: "flex-start",
+            gap: "1rem",
+            marginTop: "1rem",
+          }}
+        >
+          <ButtonComponent title="Confirmar" onClick={deletarPostagem} />
+          <ButtonComponent title="Cancelar" onClick={() => setVisible(false)} />
+        </div>
       </DialogBase>
-
     </>
   );
 }

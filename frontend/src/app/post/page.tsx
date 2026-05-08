@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import styles from "../styles/Post.module.css";
 import axios from "axios";
@@ -32,7 +32,7 @@ interface Options {
   year: "numeric";
 }
 
-export default function PostPage() {
+function PostContent() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const [post, setPost] = useState<PostResponse>();
@@ -42,7 +42,7 @@ export default function PostPage() {
     const fetchPosts = async () => {
       try {
         const response = await axios.get<PostResponse>(
-          `http://localhost:8080/api/posts/${id}`
+          `http://localhost:8080/api/posts/${id}`,
         );
         setPost(response.data);
       } catch (err) {
@@ -78,7 +78,7 @@ export default function PostPage() {
 
   const dataFormatada = new Date(post.createdAt).toLocaleDateString(
     "pt-BR",
-    options
+    options,
   );
 
   return (
@@ -136,5 +136,23 @@ export default function PostPage() {
         </motion.p>
       </article>
     </div>
+  );
+}
+
+export default function PostPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className={styles.loadingWrapper}>
+          <ProgressSpinner
+            strokeWidth="4"
+            animationDuration=".8s"
+            className={styles.spinner}
+          />
+        </div>
+      }
+    >
+      <PostContent />
+    </Suspense>
   );
 }

@@ -62,11 +62,9 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post não encontrado com id: " + id));
 
-        if (post.getImageUrl() != null && post.getImageUrl().startsWith("blob:")) {
-            System.out.println("Ignorando blob URL, não é imagem do MinIO");
-        } else {
-            String objectName = extractObjectName(post.getImageUrl());
-            objectStorageService.deleteImage("images", objectName);
+        String imageUrl = post.getImageUrl();
+        if (imageUrl != null && !imageUrl.startsWith("blob:")) {
+            objectStorageService.deleteImage("images", imageUrl);
         }
 
         postRepository.delete(post);
@@ -75,10 +73,22 @@ public class PostService {
     public PostResponseDTO updatePost(UUID id, PostRequestDTO requestDTO) {
         Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post não encontrado com id: " + id));
 
+        String oldImageUrl = post.getImageUrl();
+        String newImageUrl = requestDTO.imageUrl();
+
+        boolean imagemTrocada = newImageUrl != null
+                && !newImageUrl.equals(oldImageUrl)
+                && oldImageUrl != null
+                && !oldImageUrl.startsWith("blob:");
+
+        if (imagemTrocada) {
+            objectStorageService.deleteImage("images", oldImageUrl);
+        }
+
         post.setTitle(requestDTO.title());
         post.setSubtitle(requestDTO.subtitle());
         post.setContent(requestDTO.content());
-        post.setImageUrl(requestDTO.imageUrl());
+        post.setImageUrl(newImageUrl);
 
         postRepository.save(post);
 
@@ -124,9 +134,5 @@ public class PostService {
         );
     }
 
-    private String extractObjectName(String imageUrl) {
-        if (imageUrl == null || imageUrl.isBlank()) return null;
 
-        return imageUrl.substring(imageUrl.indexOf("/images/") + 1);
-    }
 }

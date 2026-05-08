@@ -25,6 +25,7 @@ import java.security.NoSuchAlgorithmException;
 public class ObjectStorageService {
     private final MinioClient minioClient;
     @Value("${minio.url}") String minioUrl;
+    @Value("${minio.public-url:${minio.url}}") String minioPublicUrl;
 
     public ObjectStorageService(
             @Value("${minio.url}") String minioUrl,
@@ -47,7 +48,7 @@ public class ObjectStorageService {
                             .filename(filePath)
                             .build());
 
-            String url = minioUrl + "/" + bucketName + "/" + objectName;
+            String url = minioPublicUrl + "/" + bucketName + "/" + objectName;
 
             System.out.println(filePath + " is successfully uploaded as " + objectName + " to bucket " + bucketName);
 

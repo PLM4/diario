@@ -1,0 +1,19 @@
+# Backend
+back/target
+back/.mvn
+back/.idea
+
+# Frontend
+frontend/node_modules
+frontend/dist
+frontend/build
+
+# Geral
+.git
+.gitignore
+.vscode
+.idea
+*.log
+*.tar
+*.zip
+.env
