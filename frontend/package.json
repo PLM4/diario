@@ -12,6 +12,7 @@
     "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
     "client-layout": "^0.1.0",
+    "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "diario": "file:",
     "framer-motion": "^12.23.26",
